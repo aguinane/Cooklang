@@ -4,11 +4,12 @@ https://github.com/clarklab/chowdown
 """
 
 from pathlib import Path
+from shutil import copy
 
-from cooklang import Recipe
+from . import Recipe
 
 
-def to_chowdown_markdown(file_path: Path) -> list[str]:
+def to_chowdown_markdown(file_path: Path, img_path: str = "") -> list[str]:
     r = Recipe(file_path)
     ast = r.ast
     title = r.title
@@ -21,6 +22,8 @@ def to_chowdown_markdown(file_path: Path) -> list[str]:
     output.append("---")
     output.append("layout: recipe")
     output.append(f"title: {title}")
+    if img_path:
+        output.append(f"image: {img_path}")
     for key, value in metadata.items():
         output.append(f"{key}: {value}")
 
@@ -56,3 +59,26 @@ def to_chowdown_markdown(file_path: Path) -> list[str]:
     output.append(description)
 
     return output
+
+
+def migrate_cook_to_chowdown(cook_dir: Path, output_dir: Path):
+    """Migrate a directory of cook recipes to chowdown files"""
+    output_dir.mkdir(exist_ok=True)
+    for file_path in cook_dir.rglob("*.cook"):
+        category = file_path.parent.name
+        title = file_path.stem
+        slug_title = title.replace(" ", "-").lower()
+
+        img_path = file_path.with_suffix(".jpg")
+        if img_path.exists():
+            chow_img_path = output_dir / f"{slug_title}.jpg"
+            copy(img_path, chow_img_path)
+            img_path = f"{slug_title}.jpg"
+        else:
+            img_path = ""
+
+        output = to_chowdown_markdown(file_path, img_path=img_path)
+
+        nyum_path = output_dir / f"{slug_title}.md"
+        with open(nyum_path, "w") as f:
+            f.writelines([x + "\n" for x in output])

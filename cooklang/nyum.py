@@ -8,10 +8,12 @@ from shutil import copy
 
 import frontmatter
 
-from cooklang import Recipe
+from . import Recipe
 
 
-def to_nyum_markdown(file_path: Path) -> list[str]:
+def to_nyum_markdown(
+    file_path: Path, category: str = "", img_path: str = ""
+) -> list[str]:
     r = Recipe(file_path)
     ast = r.ast
     title = r.title
@@ -22,8 +24,17 @@ def to_nyum_markdown(file_path: Path) -> list[str]:
 
     output.append("---")
     output.append(f"title: {title}")
+    if category:
+        output.append(f"category: {category}")
+    if img_path:
+        output.append(f"image: {img_path}")
+
     for key, value in metadata.items():
-        output.append(f"{key}: {value}")
+        if key == "tags":
+            for tag in value.split(","):
+                output.append(f"{tag}: ✓")
+        else:
+            output.append(f"{key}: {value}")
 
     output.append("---")
     output.append("")
@@ -58,14 +69,30 @@ def to_nyum_markdown(file_path: Path) -> list[str]:
     return output
 
 
+NYUM_TAGS = ["favorite", "veggie", "vegan", "spicy", "sweet", "salty", "sour", "bitter"]
+NYUM_ATTRIBUTES = ["description", "size", "source", "time", "author"]
+
+
 def from_nyum_markdown(file_path: Path) -> list[str]:
+    """Parse a nyum markdown file into cooklang"""
     with open(file_path) as fh:
         metadata, content = frontmatter.parse(fh.read())
 
     output = []
-    desc = metadata.get("description", "")
-    if desc:
-        output.append(f">> description: {desc}")
+    for attr in NYUM_ATTRIBUTES:
+        val = metadata.get(attr, "")
+        if val:
+            output.append(f">> {attr}: {val}")
+
+    tags = []
+    for attr in NYUM_TAGS:
+        val = metadata.get(attr, "")
+        if val:
+            tags.append(attr)
+    if tags:
+        tags_val = ",".join(tags)
+        output.append(f">> tags: {tags_val}")
+
     output.append("")
     steps = content.split("---")
     for step in steps:
@@ -112,4 +139,27 @@ def migrate_nyum_to_cook(nyum_dir: Path, output_dir: Path):
             copy(img_path, cook_img_path)
 
         with open(cook_path, "w") as f:
+            f.writelines([x + "\n" for x in output])
+
+
+def migrate_cook_to_nyum(cook_dir: Path, output_dir: Path):
+    """Migrate a directory of cook recipes to nyum files"""
+    output_dir.mkdir(exist_ok=True)
+    for file_path in cook_dir.rglob("*.cook"):
+        category = file_path.parent.name
+        title = file_path.stem
+        slug_title = title.replace(" ", "-").lower()
+
+        img_path = file_path.with_suffix(".jpg")
+        if img_path.exists():
+            nyum_img_path = output_dir / f"{slug_title}.jpg"
+            copy(img_path, nyum_img_path)
+            img_path = f"{slug_title}.jpg"
+        else:
+            img_path = ""
+
+        output = to_nyum_markdown(file_path, category=category, img_path=img_path)
+
+        nyum_path = output_dir / f"{slug_title}.md"
+        with open(nyum_path, "w") as f:
             f.writelines([x + "\n" for x in output])

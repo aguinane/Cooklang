@@ -174,7 +174,9 @@ class Recipe:
 
             step_item_dicts = []
             for text in step_items:
-                if text[0] == "@":
+                if not text:
+                    continue  # Skip empty line
+                elif text[0] == "@":
                     item = parse_ingredient(text)
                 elif text[0] == "#":
                     item = parse_cookware(text)
