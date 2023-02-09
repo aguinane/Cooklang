@@ -1,6 +1,6 @@
 # Cooklang
 
-Python Cooklang parser.
+Python [Cooklang](https://cooklang.org) parser.
 
 
 ## Export to other formats
