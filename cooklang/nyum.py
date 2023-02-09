@@ -73,7 +73,7 @@ NYUM_TAGS = ["favorite", "veggie", "vegan", "spicy", "sweet", "salty", "sour", "
 NYUM_ATTRIBUTES = ["description", "size", "source", "time", "author"]
 
 
-def from_nyum_markdown(file_path: Path) -> list[str]:
+def from_nyum_markdown(file_path: Path) -> tuple[dict, list[str]]:
     """Parse a nyum markdown file into cooklang"""
     with open(file_path) as fh:
         metadata, content = frontmatter.parse(fh.read())
