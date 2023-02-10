@@ -98,6 +98,7 @@ def from_nyum_markdown(file_path: Path) -> tuple[dict, list[str]]:
     for step in steps:
         step_output = ""
         step = step.replace("> ", "")
+        ingredients = []
         lines = step.split("\n")
         for line in lines:
             if line and line[0] == "*":
@@ -113,10 +114,18 @@ def from_nyum_markdown(file_path: Path) -> tuple[dict, list[str]]:
                 else:
                     ingredient = line.replace("* ", "").strip()
                     cook_ingr = "@" + ingredient + "{}"
-                step_output += cook_ingr + " "
+                pair = (ingredient, cook_ingr)
+                ingredients.append(pair)
             else:
                 if line:
                     step_output += line + " "
+
+        for ingredient, cook_ingr in ingredients:
+            if ingredient in step_output:
+                step_output = step_output.replace(ingredient, cook_ingr, 1)
+            else:
+                step_output += " " + cook_ingr
+
         output.append(step_output)
         output.append("")
 
