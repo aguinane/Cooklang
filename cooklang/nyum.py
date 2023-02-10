@@ -7,6 +7,7 @@ from pathlib import Path
 from shutil import copy
 
 import frontmatter
+from slugify import slugify
 
 from . import Recipe
 
@@ -23,7 +24,7 @@ def to_nyum_markdown(
     steps = ast["steps"]
 
     output.append("---")
-    output.append(f"title: {title}")
+    output.append(f'title: "{title}"')
     if category:
         output.append(f"category: {category}")
     if img_path:
@@ -157,7 +158,7 @@ def migrate_cook_to_nyum(cook_dir: Path, output_dir: Path):
     for file_path in cook_dir.glob("*/*.cook"):
         category = file_path.parent.name
         title = file_path.stem
-        slug_title = title.replace(" ", "-").lower()
+        slug_title = slugify(title)
 
         img_path = file_path.with_suffix(".jpg")
         if img_path.exists():

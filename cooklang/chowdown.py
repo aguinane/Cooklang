@@ -6,6 +6,8 @@ https://github.com/clarklab/chowdown
 from pathlib import Path
 from shutil import copy
 
+from slugify import slugify
+
 from . import Recipe
 
 
@@ -32,8 +34,9 @@ def to_chowdown_markdown(file_path: Path, img_path: str = "") -> list[str]:
     for item in ast["ingredients"]:
         name = item["name"]
         quantity = f"{item['quantity']} {item['units']}".strip()
-        ingredient = f"- {quantity} {name}" if quantity else name
-        output.append(ingredient)
+        ingredient = f"*{quantity}* {name}" if quantity else name
+        line = f'- "{ingredient}"'
+        output.append(line)
 
     output.append(" ")
     output.append("directions:")
@@ -65,9 +68,8 @@ def migrate_cook_to_chowdown(cook_dir: Path, output_dir: Path):
     """Migrate a directory of cook recipes to chowdown files"""
     output_dir.mkdir(exist_ok=True)
     for file_path in cook_dir.glob("*/*.cook"):
-        category = file_path.parent.name
         title = file_path.stem
-        slug_title = title.replace(" ", "-").lower()
+        slug_title = slugify(title)
 
         img_path = file_path.with_suffix(".jpg")
         if img_path.exists():

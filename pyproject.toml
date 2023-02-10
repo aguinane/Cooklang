@@ -18,7 +18,7 @@ classifiers = [
 keywords = ["geojson", "KML"]
 requires-python = ">=3.8"
 dynamic = ["version", "description"]
-dependencies = ["typer", "python-frontmatter"]
+dependencies = ["typer", "python-frontmatter", "python-slugify"]
 
 [project.optional-dependencies]
 test = ["pytest >=2.7.3", "pytest-cov", "mypy"]
