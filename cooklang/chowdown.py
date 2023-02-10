@@ -64,7 +64,7 @@ def to_chowdown_markdown(file_path: Path, img_path: str = "") -> list[str]:
 def migrate_cook_to_chowdown(cook_dir: Path, output_dir: Path):
     """Migrate a directory of cook recipes to chowdown files"""
     output_dir.mkdir(exist_ok=True)
-    for file_path in cook_dir.rglob("*.cook"):
+    for file_path in cook_dir.glob("*/*.cook"):
         category = file_path.parent.name
         title = file_path.stem
         slug_title = title.replace(" ", "-").lower()
