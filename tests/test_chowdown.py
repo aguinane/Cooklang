@@ -8,4 +8,4 @@ def test_chowdown_export():
     output = to_chowdown_markdown(example_file)
     assert "layout: recipe" in output
     assert "- Serve straightaway with your favourite topping." in output
-    assert "- 250 ml milk" in output
+    assert '- "*250 ml* milk"' in output
