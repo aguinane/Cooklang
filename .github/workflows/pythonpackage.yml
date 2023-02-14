@@ -31,7 +31,3 @@ jobs:
         run: |
           pip install pytest pytest-cov
           pytest --cov=cooklang --cov-report=xml
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
