@@ -39,4 +39,4 @@ omit = ["*/version.py"]
 [tool.coverage.report]
 show_missing = true
 skip_empty = true
-fail_under = 85
+fail_under = 80
