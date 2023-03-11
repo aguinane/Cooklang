@@ -1,5 +1,11 @@
-from cooklang.parser import parse_cookware, parse_ingredient, parse_timer
-from cooklang.parser import find_cookware, find_ingredients, find_timers
+from cooklang.parser import (
+    find_cookware,
+    find_ingredients,
+    find_timers,
+    parse_cookware,
+    parse_ingredient,
+    parse_timer,
+)
 
 
 def test_parse_cookware():
@@ -12,8 +18,10 @@ def test_parse_cookware():
 
 
 def test_find_cookware():
-    assert find_cookware("Blend things in a #blender") == ['#blender']
-    assert find_cookware("Mash things with a #potato masher{} for a bit") == ['#potato masher{}']
+    assert find_cookware("Blend things in a #blender") == ["#blender"]
+    assert find_cookware("Mash things with a #potato masher{} for a bit") == [
+        "#potato masher{}"
+    ]
 
 
 def test_parse_ingredient():
@@ -32,8 +40,8 @@ def test_parse_ingredient():
 
 
 def test_find_ingredients():
-    assert find_ingredients("Add @salt to the thing") == ['@salt']
-    assert find_ingredients("Add @milk{4%cup}") == ['@milk{4%cup}']
+    assert find_ingredients("Add @salt to the thing") == ["@salt"]
+    assert find_ingredients("Add @milk{4%cup}") == ["@milk{4%cup}"]
 
 
 def test_parse_timer():
@@ -50,8 +58,7 @@ def test_parse_timer():
         "units": "minutes",
     }
 
+
 def test_find_timers():
-    assert find_timers("Do thing for ~{25%minutes}") == ['~{25%minutes}']
-    assert find_timers("Do thing for ~eggs{3%minutes} and stop") == ['~eggs{3%minutes}']
-
-
+    assert find_timers("Do thing for ~{25%minutes}") == ["~{25%minutes}"]
+    assert find_timers("Do thing for ~eggs{3%minutes} and stop") == ["~eggs{3%minutes}"]

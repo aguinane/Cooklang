@@ -1,0 +1,119 @@
+{
+  "metadata": {
+    "source": "https://www.dinneratthezoo.com/wprm_print/6796",
+    "total time": "6 minutes",
+    "servings": "2"
+  },
+  "ingredients": [
+    {
+      "type": "ingredient",
+      "name": "apple juice",
+      "quantity": "1,5",
+      "units": "cups"
+    },
+    {
+      "type": "ingredient",
+      "name": "banana",
+      "quantity": "one sliced",
+      "units": ""
+    },
+    {
+      "type": "ingredient",
+      "name": "frozen mixed berries",
+      "quantity": "1,5",
+      "units": "cups"
+    },
+    {
+      "type": "ingredient",
+      "name": "vanilla greek yogurt",
+      "quantity": "some",
+      "units": ""
+    },
+    {
+      "type": "ingredient",
+      "name": "honey",
+      "quantity": "some",
+      "units": ""
+    }
+  ],
+  "cookware": [
+    {
+      "type": "cookware",
+      "name": "blender",
+      "quantity": ""
+    }
+  ],
+  "steps": [
+    [
+      {
+        "type": "text",
+        "value": "Place the "
+      },
+      {
+        "type": "ingredient",
+        "name": "apple juice",
+        "quantity": "1,5",
+        "units": "cups"
+      },
+      {
+        "type": "text",
+        "value": ", "
+      },
+      {
+        "type": "ingredient",
+        "name": "banana",
+        "quantity": "one sliced",
+        "units": ""
+      },
+      {
+        "type": "text",
+        "value": ", "
+      },
+      {
+        "type": "ingredient",
+        "name": "frozen mixed berries",
+        "quantity": "1,5",
+        "units": "cups"
+      },
+      {
+        "type": "text",
+        "value": " and "
+      },
+      {
+        "type": "ingredient",
+        "name": "vanilla greek yogurt",
+        "quantity": "some",
+        "units": ""
+      },
+      {
+        "type": "text",
+        "value": " in a "
+      },
+      {
+        "type": "cookware",
+        "name": "blender",
+        "quantity": ""
+      },
+      {
+        "type": "text",
+        "value": "; blend until smooth. If the smoothie seems too thick, add a little more liquid (1/4 cup). "
+      }
+    ],
+    [
+      {
+        "type": "text",
+        "value": "Taste and add "
+      },
+      {
+        "type": "ingredient",
+        "name": "honey",
+        "quantity": "some",
+        "units": ""
+      },
+      {
+        "type": "text",
+        "value": " if desired. Pour into two glasses and garnish with fresh berries and mint sprigs if desired."
+      }
+    ]
+  ]
+}

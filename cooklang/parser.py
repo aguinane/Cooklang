@@ -119,6 +119,7 @@ class Recipe:
         self.metadata = {}
         self.ingredients = []
         self.cookware = []
+        self.timers = []
         self.steps = []
         self.ast = self.parse_ast()
 
@@ -150,6 +151,8 @@ class Recipe:
             step_items = [step]
             cookware_texts = []
             ingredient_texts = []
+            timer_texts = []
+
             for cookware in find_cookware(step):
                 cookware_texts.append(cookware)
                 item = parse_cookware(cookware)
@@ -160,7 +163,12 @@ class Recipe:
                 item = parse_ingredient(ingredient)
                 self.ingredients.append(item)
 
-            things = ingredient_texts + cookware_texts
+            for timer in find_timers(step):
+                timer_texts.append(timer)
+                item = parse_timer(timer)
+                self.timers.append(item)
+
+            things = ingredient_texts + cookware_texts + timer_texts
             for thing in things:
                 temp_items = copy.deepcopy(step_items)
                 for item in temp_items:
@@ -181,6 +189,8 @@ class Recipe:
                     item = parse_ingredient(text)
                 elif text[0] == "#":
                     item = parse_cookware(text)
+                elif text[0] == "~":
+                    item = parse_timer(text)
                 else:
                     item = {"type": "text", "value": text}
                 step_item_dicts.append(item)

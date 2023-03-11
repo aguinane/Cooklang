@@ -49,6 +49,8 @@ def to_nyum_markdown(
                 method += item["value"]
             elif item["type"] == "cookware":
                 method += item["name"]
+            elif item["type"] in "timer":
+                method += f"{item['quantity']} {item['units']}".strip()
             elif item["type"] == "ingredient":
                 name = item["name"]
                 quantity = f"{item['quantity']} {item['units']}".strip()
@@ -133,9 +135,10 @@ def from_nyum_markdown(file_path: Path) -> tuple[dict, list[str]]:
     return metadata, output
 
 
-def migrate_nyum_to_cook(nyum_dir: Path, output_dir: Path):
+def migrate_nyum_to_cook(nyum_dir: Path, output_dir: Path) -> int:
     """Migrate a directory of nyum recipes to cook files"""
-    for file_path in nyum_dir.glob("*.md"):
+    nyum_files = list(nyum_dir.glob("*.md"))
+    for file_path in nyum_files:
         meta, output = from_nyum_markdown(file_path)
         title = meta["title"]
         category = meta["category"]
@@ -150,13 +153,19 @@ def migrate_nyum_to_cook(nyum_dir: Path, output_dir: Path):
 
         with open(cook_path, "w") as f:
             f.writelines([x + "\n" for x in output])
+    return len(nyum_files)
 
 
-def migrate_cook_to_nyum(cook_dir: Path, output_dir: Path):
+def migrate_cook_to_nyum(cook_dir: Path, output_dir: Path) -> int:
     """Migrate a directory of cook recipes to nyum files"""
     output_dir.mkdir(exist_ok=True)
-    for file_path in cook_dir.glob("*/*.cook"):
-        category = file_path.parent.name
+    cook_files = list(cook_dir.glob("*/*.cook"))
+    cook_files += list(cook_dir.glob("*.cook"))
+    for file_path in cook_files:
+        if file_path.parent != cook_dir:
+            category = file_path.parent.name
+        else:
+            category = ""
         title = file_path.stem
         slug_title = slugify(title)
 
@@ -173,3 +182,4 @@ def migrate_cook_to_nyum(cook_dir: Path, output_dir: Path):
         nyum_path = output_dir / f"{slug_title}.md"
         with open(nyum_path, "w") as f:
             f.writelines([x + "\n" for x in output])
+    return len(cook_files)

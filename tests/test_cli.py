@@ -17,17 +17,17 @@ def test_cli(runner):
 
 def test_cli_from_nyum(runner):
     result = runner.invoke(app, ["from-nyum", "examples/", "test-output"])
-    assert "Done!" in result.stdout
+    assert "Converted" in result.stdout
     assert result.exit_code == 0
 
 
 def test_cli_to_nyum(runner):
     result = runner.invoke(app, ["to-nyum", "examples/", "test-output"])
-    assert "Done!" in result.stdout
+    assert "Converted" in result.stdout
     assert result.exit_code == 0
 
 
 def test_cli_to_chowdown(runner):
     result = runner.invoke(app, ["to-chowdown", "examples/", "test-output"])
-    assert "Done!" in result.stdout
+    assert "Converted" in result.stdout
     assert result.exit_code == 0

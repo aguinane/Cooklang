@@ -46,8 +46,10 @@ def to_chowdown_markdown(file_path: Path, img_path: str = "") -> list[str]:
         for item in step:
             if item["type"] == "text":
                 method += item["value"]
-            elif item["type"] == "cookware":
+            elif item["type"] in "cookware":
                 method += item["name"]
+            elif item["type"] in "timer":
+                method += f"{item['quantity']} {item['units']}".strip()
             elif item["type"] == "ingredient":
                 name = item["name"]
                 quantity = f"{item['quantity']} {item['units']}".strip()
@@ -64,10 +66,13 @@ def to_chowdown_markdown(file_path: Path, img_path: str = "") -> list[str]:
     return output
 
 
-def migrate_cook_to_chowdown(cook_dir: Path, output_dir: Path):
+def migrate_cook_to_chowdown(cook_dir: Path, output_dir: Path) -> int:
     """Migrate a directory of cook recipes to chowdown files"""
     output_dir.mkdir(exist_ok=True)
-    for file_path in cook_dir.glob("*/*.cook"):
+    cook_files = list(cook_dir.glob("*/*.cook"))
+    cook_files += list(cook_dir.glob("*.cook"))
+    for file_path in cook_files:
+        print(file_path)
         title = file_path.stem
         slug_title = slugify(title)
 
@@ -84,3 +89,4 @@ def migrate_cook_to_chowdown(cook_dir: Path, output_dir: Path):
         nyum_path = output_dir / f"{slug_title}.md"
         with open(nyum_path, "w") as f:
             f.writelines([x + "\n" for x in output])
+    return len(cook_files)
