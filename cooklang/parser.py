@@ -45,69 +45,70 @@ def parse_ingredient(item: str) -> dict[str, str]:
     }
 
 
-def find_cookware(step: str) -> list[dict[str, str]]:
+def parse_timer(item: str) -> dict[str, str]:
+    """Parse timer string
+    e.g. ~eggs{3%minutes} or ~{25%minutes}
+    """
+    if item[0] != "~":
+        raise ValueError("Timer should start with ~")
+    name, quantity = item.split("{", maxsplit=1)
+    val, units = parse_quantity(quantity[0:-1])
+    return {
+        "type": "timer",
+        "name": name[1:],
+        "quantity": val,
+        "units": units,
+    }
+
+
+def find_specials(step: str, start_char="#") -> list[str]:
+    matches = []
+    item = ""
+    matching: bool = False
+    specials = ["~", "@", "#"]
+    for x in step:
+        if x == start_char:
+            matching = True
+            item += x
+            continue
+        if matching and x in specials:
+            if " " in item:
+                item = item.split(" ")[0]
+            elif "." in item:
+                item = item.split(".")[0]
+            matches.append(item)
+            matching = False
+            item = ""
+        if matching and x == "}":
+            item += x
+            matches.append(item)
+            matching = False
+            item = ""
+        if matching:
+            item += x
+
+    if matching:
+        if " " in item:
+            item = item.split(" ")[0]
+        elif "." in item:
+            item = item.split(".")[0]
+        matches.append(item)
+    return matches
+
+
+def find_cookware(step: str) -> list[str]:
     """Find cookware items in a recipe step"""
-    cookwares = []
-    item = ""
-    matching: bool = False
-    for x in step:
-        if x == "#":
-            matching = True
-        if matching and x == "@":
-            if " " in item:
-                item = item.split(" ")[0]
-            elif "." in item:
-                item = item.split(".")[0]
-            cookwares.append(item)
-            matching = False
-            item = ""
-        if matching and x == "}":
-            item += x
-            cookwares.append(item)
-            matching = False
-            item = ""
-        if matching:
-            item += x
-
-    if matching:
-        if " " in item:
-            item = item.split(" ")[0]
-        elif "." in item:
-            item = item.split(".")[0]
-        cookwares.append(item)
-    return cookwares
+    return find_specials(step, "#")
 
 
-def find_ingredients(step: str) -> list[dict[str, str]]:
+def find_ingredients(step: str) -> list[str]:
     """Find ingredients in a recipe step"""
-    ingredients = []
-    item = ""
-    matching: bool = False
-    for x in step:
-        if x == "@":
-            matching = True
-        if matching and x == "#":
-            if " " in item:
-                item = item.split(" ")[0]
-            elif "." in item:
-                item = item.split(".")[0]
-            ingredients.append(item)
-            matching = False
-            item = ""
-        if matching and x == "}":
-            item += x
-            ingredients.append(item)
-            matching = False
-            item = ""
-        if matching:
-            item += x
-    if matching:
-        if " " in item:
-            item = item.split(" ")[0]
-        elif "." in item:
-            item = item.split(".")[0]
-        ingredients.append(item)
-    return ingredients
+    return find_specials(step, "@")
+
+
+def find_timers(step: str) -> list[str]:
+    """Find timers in a recipe step"""
+    return find_specials(step, "~")
 
 
 class Recipe:

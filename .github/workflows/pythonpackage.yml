@@ -30,4 +30,4 @@ jobs:
       - name: Test with pytest
         run: |
           pip install pytest pytest-cov
-          pytest --cov=cooklang --cov-report=xml
+          pytest --cov-report=xml
