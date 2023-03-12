@@ -62,3 +62,8 @@ def test_parse_timer():
 def test_find_timers():
     assert find_timers("Do thing for ~{25%minutes}") == ["~{25%minutes}"]
     assert find_timers("Do thing for ~eggs{3%minutes} and stop") == ["~eggs{3%minutes}"]
+
+
+def test_skip_timers_in_ingredients():
+    """ Ignore the approx symbol in ingredients"""
+    assert find_timers("Add @honey{~1/2 cup}") == []
