@@ -69,16 +69,19 @@ def to_chowdown_markdown(file_path: Path, img_path: str = "") -> list[str]:
 def migrate_cook_to_chowdown(cook_dir: Path, output_dir: Path) -> int:
     """Migrate a directory of cook recipes to chowdown files"""
     output_dir.mkdir(exist_ok=True)
+    output_dir_recipes = output_dir / '_recipes'
+    output_dir_recipes.mkdir(exist_ok=True)
+    output_dir_images = output_dir / 'images'
+    output_dir_images.mkdir(exist_ok=True)
     cook_files = list(cook_dir.glob("*/*.cook"))
     cook_files += list(cook_dir.glob("*.cook"))
     for file_path in cook_files:
-        print(file_path)
         title = file_path.stem
         slug_title = slugify(title)
 
         img_path = file_path.with_suffix(".jpg")
         if img_path.exists():
-            chow_img_path = output_dir / f"{slug_title}.jpg"
+            chow_img_path = output_dir_images / f"{slug_title}.jpg"
             copy(img_path, chow_img_path)
             img_path = f"{slug_title}.jpg"
         else:
@@ -86,7 +89,7 @@ def migrate_cook_to_chowdown(cook_dir: Path, output_dir: Path) -> int:
 
         output = to_chowdown_markdown(file_path, img_path=img_path)
 
-        nyum_path = output_dir / f"{slug_title}.md"
-        with open(nyum_path, "w") as f:
+        chow_path = output_dir_recipes / f"{slug_title}.md"
+        with open(chow_path, "w") as f:
             f.writelines([x + "\n" for x in output])
     return len(cook_files)
