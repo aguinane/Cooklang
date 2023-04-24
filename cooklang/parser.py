@@ -66,8 +66,10 @@ def find_specials(step: str, start_char="#") -> list[str]:
     item = ""
     matching: bool = False
     specials = ["~", "@", "#"]
-    for x in step:
+    for i, x in enumerate(step):
         if x == start_char:
+            if start_char == "~" and step[i - 1] == "{":
+                continue  # Skip - approx value in ingredient
             matching = True
             item += x
             continue
