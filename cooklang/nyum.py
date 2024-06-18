@@ -162,10 +162,7 @@ def migrate_cook_to_nyum(cook_dir: Path, output_dir: Path) -> int:
     cook_files = list(cook_dir.glob("*/*.cook"))
     cook_files += list(cook_dir.glob("*.cook"))
     for file_path in cook_files:
-        if file_path.parent != cook_dir:
-            category = file_path.parent.name
-        else:
-            category = ""
+        category = file_path.parent.name if file_path.parent != cook_dir else ""
         title = file_path.stem
         slug_title = slugify(title)
 

@@ -134,7 +134,7 @@ class Recipe:
         with open(self.file_path) as f:
             lines = f.readlines()
 
-        for i, line in enumerate(lines):
+        for _i, line in enumerate(lines):
             line = line.strip()
             line = line.split("--")[0]  # Remove comments
 
