@@ -1,4 +1,4 @@
-""" Parse recipes in Cooklang format """
+"""Parse recipes in Cooklang format"""
 
 from .parser import Recipe
 from .version import __version__

@@ -156,9 +156,20 @@ def migrate_nyum_to_cook(nyum_dir: Path, output_dir: Path) -> int:
     return len(nyum_files)
 
 
+def clear_existing_nyum(output_dir: Path):
+    recipe_files = list(output_dir.glob("*.md"))
+    for file_path in recipe_files:
+        file_path.unlink()
+
+    recipe_images = list(output_dir.glob("*.jpg"))
+    for file_path in recipe_images:
+        file_path.unlink()
+
+
 def migrate_cook_to_nyum(cook_dir: Path, output_dir: Path) -> int:
     """Migrate a directory of cook recipes to nyum files"""
     output_dir.mkdir(exist_ok=True)
+    clear_existing_nyum(output_dir)
     cook_files = list(cook_dir.glob("*/*.cook"))
     cook_files += list(cook_dir.glob("*.cook"))
     for file_path in cook_files:

@@ -66,13 +66,28 @@ def to_chowdown_markdown(file_path: Path, img_path: str = "") -> list[str]:
     return output
 
 
+def clear_existing_chowdown(output_dir: Path):
+    output_dir_recipes = output_dir / "_recipes"
+    recipe_files = list(output_dir_recipes.glob("*.md"))
+    for file_path in recipe_files:
+        file_path.unlink()
+
+    output_dir_images = output_dir / "images"
+    recipe_images = list(output_dir_images.glob("*.jpg"))
+    for file_path in recipe_images:
+        file_path.unlink()
+
+
 def migrate_cook_to_chowdown(cook_dir: Path, output_dir: Path) -> int:
     """Migrate a directory of cook recipes to chowdown files"""
     output_dir.mkdir(exist_ok=True)
-    output_dir_recipes = output_dir / '_recipes'
+    output_dir_recipes = output_dir / "_recipes"
     output_dir_recipes.mkdir(exist_ok=True)
-    output_dir_images = output_dir / 'images'
+    output_dir_images = output_dir / "images"
     output_dir_images.mkdir(exist_ok=True)
+
+    clear_existing_chowdown(output_dir)
+
     cook_files = list(cook_dir.glob("*/*.cook"))
     cook_files += list(cook_dir.glob("*.cook"))
     for file_path in cook_files:

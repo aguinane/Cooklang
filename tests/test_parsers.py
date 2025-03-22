@@ -65,5 +65,5 @@ def test_find_timers():
 
 
 def test_skip_timers_in_ingredients():
-    """ Ignore the approx symbol in ingredients"""
+    """Ignore the approx symbol in ingredients"""
     assert find_timers("Add @honey{~1/2 cup}") == []
