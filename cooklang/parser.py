@@ -1,6 +1,7 @@
 import copy
 import json
 from pathlib import Path
+import frontmatter
 
 
 def parse_cookware(item: str) -> dict[str, str]:
@@ -131,14 +132,18 @@ class Recipe:
 
     def parse_ast(self) -> dict:
         """Read the file and convert to AST dictionary"""
-        with open(self.file_path) as f:
-            lines = f.readlines()
+        with open(self.file_path) as fh:
+            metadata, content = frontmatter.parse(fh.read())
+        lines = content.split("\n")
+
+        self.metadata = metadata
 
         for _i, line in enumerate(lines):
             line = line.strip()
             line = line.split("--")[0]  # Remove comments
 
             if line[0:2] == ">>":  # Metadata line
+                print(">> Syntax Deprecated")
                 key, val = line[2:].split(":", maxsplit=1)
                 key = key.strip()
                 val = val.strip()
