@@ -1,6 +1,7 @@
 import copy
 import json
 from pathlib import Path
+
 import frontmatter
 
 
@@ -125,6 +126,9 @@ class Recipe:
         self.timers = []
         self.steps = []
         self.ast = self.parse_ast()
+
+    def __repr__(self):
+        return f"Recipe('{self.title}')"
 
     @property
     def title(self) -> str:
