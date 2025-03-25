@@ -29,9 +29,14 @@ def to_chowdown_markdown(
     if img_path:
         output.append(f"image: {img_path}")
     for key, value in metadata.items():
-        output.append(f"{key}: {value}")
+        if key == "servings":
+            key = "size"
+        if key not in ("diet"):
+            output.append(f"{key}: {value}")
 
     tags = [category] if category else []
+    if "diet" in metadata:
+        tags.extend(metadata["diet"])
     output.append(" ")
     output.append("tags:")
     for tag in tags:

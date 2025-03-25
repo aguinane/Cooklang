@@ -31,8 +31,10 @@ def to_nyum_markdown(
         output.append(f"image: {img_path}")
 
     for key, value in metadata.items():
-        if key == "tags":
-            for tag in value.split(","):
+        if key == "servings":
+            key = "size"
+        if key in ("tags", "diet"):
+            for tag in value:
                 output.append(f"{tag}: ✓")
         else:
             output.append(f"{key}: {value}")
